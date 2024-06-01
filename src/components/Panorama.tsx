@@ -43,7 +43,9 @@ function Panorama() {
         if (canvas) {
             image.src = PanoramaImage;
             image.onload = () => {
+          
                 setTexture(()=>new CanvasTexture(canvas))
+               
                 setCtx(() => canvas.getContext("2d")!)
                 //must be 300 x 150 to avoid gaps. Todo find out why. Prob a default somewhere. Possibly a camera setting,
                 ctx.drawImage(image, 0, 0, 300, 150);
@@ -64,6 +66,7 @@ function Panorama() {
         ctx.fillRect(x / 2.9, y / 2.9, 30, 30);
         ctx.filter = "none";
         setTexture(new CanvasTexture(canvas))
+        texture.needsUpdate = true;
 
     }
 
@@ -74,15 +77,19 @@ function Panorama() {
             <canvas onClick={(e) => paint(e)}
                 style={{ height: "400px", width: "800px", borderRadius: "10px" }}
                 ref={canvasRef} />
-            <h3 style={{ color: "#e1e1e1", marginTop: "20px", userSelect: "none" }}>Drag here to view panorama</h3>
+            <h3 style={{ color: "#e1e1e1", marginTop: "20px", userSelect: "none" }}>Drag here to move panorama</h3>
 
             <Canvas style={{ borderRadius: "10px", height: "400px", width: "800px", left: "calc(100vw / 2 - 400px)" }}  >
+                {texture &&
+                <>
                 <CameraController />
                 <ambientLight intensity={1} />
                 <mesh position={[0, 0, 0]} scale={[-1, 1, 1]} >
                     <sphereGeometry args={[10, 16, 16]} />
                     <meshStandardMaterial side={DoubleSide} map={texture} />
                 </mesh>
+                </>
+}
             </Canvas>
         </div>)
 }
