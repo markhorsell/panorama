@@ -41,23 +41,19 @@ function Panorama() {
 
         let image = new Image()
         if (canvas) {
-
             image.src = PanoramaImage;
             image.onload = () => {
+                setTexture(()=>new CanvasTexture(canvas))
                 setCtx(() => canvas.getContext("2d")!)
                 //must be 300 x 150 to avoid gaps. Todo find out why. Prob a default somewhere. Possibly a camera setting,
                 ctx.drawImage(image, 0, 0, 300, 150);
-
-                setTexture(new CanvasTexture(canvas))
-
             }
         }
         return () => {
 
-
         };
 
-    }, [])
+    }, [canvasRef,canvas])
 
     function paint(e: React.MouseEvent<HTMLElement>) {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -74,7 +70,7 @@ function Panorama() {
     return (
         <div style={{ textAlign: "center", background: "#1e1e1e" }}>
             <h1 style={{ color: "#e1e1e1", userSelect: "none" }}>Equirectangular Panorama Viewer</h1>
-            <h3 style={{ color: "#e1e1e1", userSelect: "none" }}>Click here to paint blur on to image</h3>
+            <h3 style={{ color: "#e1e1e1", userSelect: "none" }}>Click here to paint a blur on to image</h3>
             <canvas onClick={(e) => paint(e)}
                 style={{ height: "400px", width: "800px", borderRadius: "10px" }}
                 ref={canvasRef} />
